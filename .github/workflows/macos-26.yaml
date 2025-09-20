@@ -42,22 +42,18 @@ jobs:
       - name: setup tmate
         run: |
           brew install tmate
-          
-      - name: install container with tmate
+
+      - name: Start Apple Container in pseudo-TTY
         run: |
-          # Start a detached tmate session with a local socket
-          tmate -S /tmp/tmate.sock new-session -d
-          tmate -S /tmp/tmate.sock wait tmate-ready
+          # script allocates a PTY so XPC works
+          script -q /dev/null sudo container system start --enable-kernel-install | tee /tmp/container.log
+          sudo container list | tee -a /tmp/container.log
 
-          # Run Apple Container commands inside tmate and redirect output to workflow logs
-          tmate -S /tmp/tmate.sock send-keys "sudo container system start --enable-kernel-install | tee /tmp/container.log" C-m
-          tmate -S /tmp/tmate.sock send-keys "sudo container list | tee -a /tmp/container.log" C-m
-
-          # Attach session to stream output live
-          tmate -S /tmp/tmate.sock attach-session -d
-
-          # Optional: show captured output after session finishes
+      - name: Show captured output
+        run: |
           cat /tmp/container.log
+
+          
 
  #     - name: hack
  #       run: |
