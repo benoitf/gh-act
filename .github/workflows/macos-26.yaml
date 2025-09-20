@@ -34,24 +34,25 @@ jobs:
       - name: who
         run: who
 
-
       - name: test ssh
         run: |
           ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "ls"
+
+      - name: test ssh
+        run: |
+          ssh -i ~/.ssh/id_rsa_key -t $USER@localhost
+          sudo container system start --enable-kernel-install
+
 
       - name: setup tmate
         run: |
           brew install tmate
 
-      - name: Start Apple Container in pseudo-TTY
-        run: |
-          # script allocates a PTY so XPC works
-          script -q /dev/null sudo container system start --enable-kernel-install | tee /tmp/container.log
-          sudo container list | tee -a /tmp/container.log
-
-      - name: Show captured output
-        run: |
-          cat /tmp/container.log
+#      - name: Start Apple Container in pseudo-TTY
+#        run: |
+#          # script allocates a PTY so XPC works
+#          script -q /dev/null sudo container system start --enable-kernel-install | tee /tmp/container.log
+#          sudo container list | tee -a /tmp/container.log
 
           
 
