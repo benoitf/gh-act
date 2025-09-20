@@ -19,9 +19,24 @@ jobs:
       - name: fetch apple container
         run: wget https://github.com/apple/container/releases/download/${APPLE_CONTAINER_VERSION}/container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg
 
-      - name: install it
-        run: sudo installer -pkg container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg -target /
+      - name: install / start apple container
+        run: 
+          sudo installer -pkg container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg -target /
+          sudo container system start --enable-kernel-install
 
+      - name: install docker cli
+        run: 
+          brew install docker
+
+      - name: install socktainer
+        run:
+          wget https://github.com/socktainer/socktainer/releases/download/v0.2.0/socktainer
+          chmod 755 socktainer
+
+      - name: run socktainer
+        run:
+          nohup ./socktainer > service.log 2>&1 &
+          echo $! > service.pid
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
