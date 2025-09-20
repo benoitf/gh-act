@@ -1,0 +1,20 @@
+name: tst
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mac:
+    name: mac
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: ls
+        run: ls -la
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
