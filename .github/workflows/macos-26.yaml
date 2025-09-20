@@ -23,7 +23,14 @@ jobs:
         run: sudo installer -pkg container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg -target /
 
       - name: start apple container
-        run: sudo container system start --enable-kernel-install </dev/null
+        run: sudo container system start --disable-kernel-install
+
+      - name: download kernel
+        run: wget https://github.com/kata-containers/kata-containers/releases/download/3.17.0/kata-static-3.17.0-arm64.tar.xz
+
+      - name: set kernel
+        run: container system kernel set --binary kata-static-3.17.0-arm64.tar.xz
+        
 
       - name: install docker cli
         run: |
