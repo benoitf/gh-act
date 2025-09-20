@@ -20,21 +20,21 @@ jobs:
         run: wget https://github.com/apple/container/releases/download/${APPLE_CONTAINER_VERSION}/container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg
 
       - name: install / start apple container
-        run: 
+        run: |
           sudo installer -pkg container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg -target /
           sudo container system start --enable-kernel-install
 
       - name: install docker cli
-        run: 
+        run: |
           brew install docker
 
       - name: install socktainer
-        run:
+        run: |
           wget https://github.com/socktainer/socktainer/releases/download/v0.2.0/socktainer
           chmod 755 socktainer
 
       - name: run socktainer
-        run:
+        run: |
           nohup ./socktainer > service.log 2>&1 &
           echo $! > service.pid
 
