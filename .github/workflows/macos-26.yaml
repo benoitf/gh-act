@@ -37,9 +37,8 @@ jobs:
 
       - name: hack
         run: |
-          osascript -e 'tell application "System Events" to log in'
-          # Or simply ensure Dock and GUI are running
           open -a Terminal
+          sleep 2
           script -q /dev/null sudo container system start --enable-kernel-install
 
       - name: start apple container
