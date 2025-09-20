@@ -37,7 +37,7 @@ jobs:
 
 
       - name: start apple container
-        run: ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "sudo container system start --enable-kernel-install"
+        run: ssh -i ~/.ssh/id_rsa_key -tt $USER@localhost "sudo container system start --enable-kernel-install"
 
       - name: download kernel
         run: wget https://github.com/kata-containers/kata-containers/releases/download/3.17.0/kata-static-3.17.0-arm64.tar.xz
