@@ -64,9 +64,18 @@ jobs:
 
       - name: foobar
         run: |
-         who
-         ps aux | grep loginwindow
-         scutil <<< "show State:/Users/ConsoleUser"
+          scutil <<< "show State:/Users/ConsoleUser" | grep -q 'kCGSessionLoginDoneKey : TRUE' || echo "No GUI login session"
+
+          # Check WindowServer
+          pgrep -x WindowServer > /dev/null || echo "WindowServer not running"
+
+          # Check Dock
+          pgrep -x Dock > /dev/null || echo "Dock not running"
+
+          # Check PTY
+          tty > /dev/null || echo "No interactive terminal"
+
+         
 
 #      - name: Start Apple Container in pseudo-TTY
 #        run: |
