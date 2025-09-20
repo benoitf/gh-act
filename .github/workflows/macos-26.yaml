@@ -38,15 +38,29 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "ls"
 
-      - name: test ssh
-        run: |
-          ssh -i ~/.ssh/id_rsa_key -t $USER@localhost
-          sudo container system start --enable-kernel-install
-
+#      - name: test ssh
+#        run: |
+##          ssh -i ~/.ssh/id_rsa_key -t $USER@localhost
+#         sudo container system start --enable-kernel-install
 
       - name: setup tmate
         run: |
           brew install tmate
+
+      - name: Start internal tmate session
+        run: |
+          # Start detached tmate session
+          tmate -S /tmp/tmate.sock new-session -d
+          tmate -S /tmp/tmate.sock wait tmate-ready
+
+          # Send commands automatically into the session
+          tmate -S /tmp/tmate.sock send-keys "sudo container system start --enable-kernel-install" C-m
+          tmate -S /tmp/tmate.sock send-keys "sudo container list" C-m
+
+          # Capture the session output periodically (optional)
+          sleep 10
+          tmate -S /tmp/tmate.sock capture-pane -p > /tmp/container.log
+          cat /tmp/container.log
 
 #      - name: Start Apple Container in pseudo-TTY
 #        run: |
