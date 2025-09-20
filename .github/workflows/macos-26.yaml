@@ -52,6 +52,7 @@ jobs:
           # Start detached tmate session
           tmate -S /tmp/tmate.sock new-session -d
           tmate -S /tmp/tmate.sock wait tmate-ready
+          tmate -S /tmp/tmate.sock capture-pane -p > /tmp/container.log
 
           # Send commands automatically into the session
           tmate -S /tmp/tmate.sock send-keys "sudo container system start --enable-kernel-install" C-m
@@ -59,7 +60,6 @@ jobs:
 
           # Capture the session output periodically (optional)
           sleep 10
-          tmate -S /tmp/tmate.sock capture-pane -p > /tmp/container.log
           cat /tmp/container.log
 
 #      - name: Start Apple Container in pseudo-TTY
