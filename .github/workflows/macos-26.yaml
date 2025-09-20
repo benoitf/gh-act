@@ -62,6 +62,12 @@ jobs:
           sleep 10
           cat /tmp/container.log
 
+      - name: foobar
+        run: |
+         who
+         ps aux | grep loginwindow
+         scutil <<< "show State:/Users/ConsoleUser"
+
 #      - name: Start Apple Container in pseudo-TTY
 #        run: |
 #          # script allocates a PTY so XPC works
