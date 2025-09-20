@@ -22,32 +22,11 @@ jobs:
       - name: install apple container
         run: sudo installer -pkg container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg -target /
 
-      - name: setup ssh keys
-        run: |
-          ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa_key
-          chmod 600 ~/.ssh/id_rsa_key
-          chmod 700 ~/.ssh
-          cat ~/.ssh/id_rsa_key.pub >> ~/.ssh/authorized_keys
-          chmod 600 ~/.ssh/authorized_keys
-          ssh-keyscan -H localhost >> ~/.ssh/known_hosts
-
-      - name: who
-        run: who
-
-      - name: test ssh
-        run: |
-          ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "ls"
-
-#      - name: test ssh
-#        run: |
-##          ssh -i ~/.ssh/id_rsa_key -t $USER@localhost
-#         sudo container system start --enable-kernel-install
-
       - name: setup tmate
         run: |
           brew install tmate
 
-      - name: Start internal tmate session
+      - name: Start internal tmate session and start container system using this tmate session
         run: |
           # Start a detached tmate session
           tmate -S /tmp/tmate.sock new-session -d
@@ -58,56 +37,33 @@ jobs:
           # Send Apple Container commands automatically
           tmate -S /tmp/tmate.sock send-keys "echo 'Starting Apple Container...'" C-m
           tmate -S /tmp/tmate.sock send-keys "sudo container system start --enable-kernel-install | tee /tmp/container.log" C-m
-          tmate -S /tmp/tmate.sock send-keys "sudo container list | tee -a /tmp/container.log" C-m
+          
+          # Loop until 'sudo container system status' returns exit code 1 or timeout (60s)
+          START=$SECONDS
+          TIMEOUT=60
 
-          # Wait a few seconds for commands to run
-          sleep 5
-
-          # Capture tmate session output
-          # Continuously capture output from tmate session
-          END=$((SECONDS+50))
-          while [ $SECONDS -lt $END ]; do
+          while [ $((SECONDS - START)) -lt $TIMEOUT ]; do
+            # Capture tmate session output
             tmate -S /tmp/tmate.sock capture-pane -p > /tmp/container.log
             cat /tmp/container.log
-            sleep 2
+
+            # Check container status locally
+            if sudo container system status >/dev/null 2>&1; then
+              # Exit code 0 → container is ready
+              echo "Container is ready. Exiting loop."
+              break
+            else
+              echo "Container not ready yet..."
+            fi
           done
 
-      - name: foobar
+      - name: check container root
         run: |
-          scutil <<< "show State:/Users/ConsoleUser" | grep -q 'kCGSessionLoginDoneKey : TRUE' || echo "No GUI login session"
-
-          # Check WindowServer
-          pgrep -x WindowServer > /dev/null || echo "WindowServer not running"
-
-          # Check Dock
-          pgrep -x Dock > /dev/null || echo "Dock not running"
-
-          # Check PTY
-          tty > /dev/null || echo "No interactive terminal"
-
-         
-
-#      - name: Start Apple Container in pseudo-TTY
-#        run: |
-#          # script allocates a PTY so XPC works
-#          script -q /dev/null sudo container system start --enable-kernel-install | tee /tmp/container.log
-#          sudo container list | tee -a /tmp/container.log
-
-          
-
- #     - name: hack
- #       run: |
- #         open -a Terminal
- #         sleep 2
- #         # script -q /dev/null sudo container system start --enable-kernel-install
-
-#      - name: start apple container
-#        run: ssh -i ~/.ssh/id_rsa_key -tt $USER@localhost "sudo container system start --enable-kernel-install"
-
-      - name: check container
-        run: |
-          sudo container system status
+          sudo container images ls
         
+      - name: check container non sudo
+        run: |
+          container images ls
 
       - name: install docker cli
         run: |
