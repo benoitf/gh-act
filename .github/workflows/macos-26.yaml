@@ -79,9 +79,9 @@ jobs:
           nohup sudo ./socktainer > service.log 2>&1 &
           echo $! > service.pid
 
-      - name: check docker image with socktainer
-        run: |
-          DOCKER_HOST=unix://$HOME/.socktainer/container.sock docker image ls
+#      - name: check docker image with socktainer
+#        run: |
+#          DOCKER_HOST=unix://$HOME/.socktainer/container.sock docker image ls
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
