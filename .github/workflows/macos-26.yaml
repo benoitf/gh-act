@@ -49,18 +49,26 @@ jobs:
 
       - name: Start internal tmate session
         run: |
-          # Start detached tmate session
+          # Start a detached tmate session
           tmate -S /tmp/tmate.sock new-session -d
           tmate -S /tmp/tmate.sock wait tmate-ready
-          tmate -S /tmp/tmate.sock capture-pane -p > /tmp/container.log
 
-          # Send commands automatically into the session
+          # Send Apple Container commands automatically
+          tmate -S /tmp/tmate.sock send-keys "echo 'Starting Apple Container...'" C-m
           tmate -S /tmp/tmate.sock send-keys "sudo container system start --enable-kernel-install" C-m
           tmate -S /tmp/tmate.sock send-keys "sudo container list" C-m
 
-          # Capture the session output periodically (optional)
-          sleep 10
-          cat /tmp/container.log
+          # Wait a few seconds for commands to run
+          sleep 5
+
+          # Capture tmate session output
+          # Continuously capture output from tmate session
+          END=$((SECONDS+50))
+          while [ $SECONDS -lt $END ]; do
+            tmate -S /tmp/tmate.sock capture-pane -p > /tmp/container.log
+            cat /tmp/container.log
+            sleep 2
+          done
 
       - name: foobar
         run: |
