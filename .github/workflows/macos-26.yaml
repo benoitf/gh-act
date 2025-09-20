@@ -31,6 +31,10 @@ jobs:
           chmod 600 ~/.ssh/authorized_keys
           ssh-keyscan -H localhost >> ~/.ssh/known_hosts
 
+      - name: who
+        run: who
+
+
       - name: test ssh
         run: |
           ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "ls"
