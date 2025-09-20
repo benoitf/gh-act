@@ -22,8 +22,20 @@ jobs:
       - name: install apple container
         run: sudo installer -pkg container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg -target /
 
+      - name: setup ssh keys
+        run: |
+          ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa_key
+          chmod 600 ~/.ssh/id_rsa_key
+          cat ~/.ssh/id_rsa_key.pub >> ~/.ssh/authorized_keys
+          chmod 600 ~/.ssh/authorized_keys
+
+      - name: test ssh
+        run: |
+          ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "ls"
+
+
       - name: start apple container
-        run: sudo container system start --disable-kernel-install
+        run: ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "sudo container system start --enable-kernel-install"
 
       - name: download kernel
         run: wget https://github.com/kata-containers/kata-containers/releases/download/3.17.0/kata-static-3.17.0-arm64.tar.xz
