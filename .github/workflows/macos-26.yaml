@@ -48,7 +48,7 @@ jobs:
             cat /tmp/container.log
 
             # Check container status locally
-            if container system status >/dev/null 2>&1; then
+            if sudo container system status >/dev/null 2>&1; then
               # Exit code 0 → container is ready
               echo "Container is ready. Exiting loop."
               break
@@ -63,8 +63,8 @@ jobs:
 
       - name: check container root
         run: |
-          container image pull hello-world
-          container images ls
+          sudo container image pull hello-world
+          sudo container images ls
         
       - name: install docker cli
         run: |
@@ -77,8 +77,12 @@ jobs:
 
       - name: run socktainer
         run: |
-          nohup ./socktainer > service.log 2>&1 &
+          nohup sudo ./socktainer > service.log 2>&1 &
           echo $! > service.pid
+
+      - name: check docker image with socktainer
+        run: |
+          DOCKER_HOST=unix://$HOME/.socktainer/container.sock docker image ls
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
