@@ -59,10 +59,12 @@ jobs:
 
       - name: check container root
         run: |
+          sudo container image pull hello-world
           sudo container images ls
         
       - name: check container non sudo
         run: |
+          container image pull httpd
           container images ls
 
       - name: install docker cli
