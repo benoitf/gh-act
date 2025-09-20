@@ -39,6 +39,17 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "ls"
 
+      - name: setup tmate
+        run: |
+          brew install tmate
+          
+      - name: install container with tmate
+        run: |
+          tmate -S /tmp/tmate.sock new-session -d
+          tmate -S /tmp/tmate.sock wait tmate-ready
+          tmate -S /tmp/tmate.sock send-keys "sudo container system start --enable-kernel-install" C-m
+          tmate -S /tmp/tmate.sock send-keys "sudo container list" C-m
+
  #     - name: hack
  #       run: |
  #         open -a Terminal
@@ -69,5 +80,5 @@ jobs:
           nohup ./socktainer > service.log 2>&1 &
           echo $! > service.pid
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+#      - name: Setup tmate session
+#        uses: mxschmitt/action-tmate@v3
