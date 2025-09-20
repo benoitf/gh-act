@@ -52,6 +52,8 @@ jobs:
           # Start a detached tmate session
           tmate -S /tmp/tmate.sock new-session -d
           tmate -S /tmp/tmate.sock wait tmate-ready
+          # skip welcome screen
+          tmate -F -S /tmp/tmate.sock send-keys "q" C-m
 
           # Send Apple Container commands automatically
           tmate -S /tmp/tmate.sock send-keys "echo 'Starting Apple Container...'" C-m
