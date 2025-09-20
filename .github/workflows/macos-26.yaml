@@ -19,10 +19,11 @@ jobs:
       - name: fetch apple container
         run: wget https://github.com/apple/container/releases/download/${APPLE_CONTAINER_VERSION}/container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg
 
-      - name: install / start apple container
-        run: |
-          sudo installer -pkg container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg -target /
-          sudo container system start --enable-kernel-install
+      - name: install apple container
+        run: sudo installer -pkg container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg -target /
+
+      - name: start apple container
+        run: sudo container system start --enable-kernel-install
 
       - name: install docker cli
         run: |
