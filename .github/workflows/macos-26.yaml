@@ -20,7 +20,7 @@ jobs:
         run: wget https://github.com/apple/container/releases/download/${APPLE_CONTAINER_VERSION}/container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg
 
       - name: install apple container
-        run: sudo -u runner installer -pkg container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg -target / -verbose
+        run: sudo installer -pkg container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg -target / -verbose
 
       - name: setup tmate
         run: |
