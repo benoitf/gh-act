@@ -35,6 +35,12 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "ls"
 
+      - name: hack
+        run: |
+          osascript -e 'tell application "System Events" to log in'
+          # Or simply ensure Dock and GUI are running
+          open -a Terminal
+          script -q /dev/null sudo container system start --enable-kernel-install
 
       - name: start apple container
         run: ssh -i ~/.ssh/id_rsa_key -tt $USER@localhost "sudo container system start --enable-kernel-install"
