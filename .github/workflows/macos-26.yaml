@@ -30,9 +30,9 @@ jobs:
           cat ~/.ssh/id_rsa_key.pub >> ~/.ssh/authorized_keys
           chmod 600 ~/.ssh/authorized_keys
 
-      - name: test ssh
-        run: |
-          ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "ls"
+#      - name: test ssh
+#        run: |
+#          ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "ls"
 
 
  #     - name: start apple container
