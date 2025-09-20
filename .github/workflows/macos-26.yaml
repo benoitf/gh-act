@@ -22,8 +22,8 @@ jobs:
       - name: install apple container
         run: sudo installer -pkg container-${APPLE_CONTAINER_VERSION}-installer-signed.pkg -target /
 
-      - name: start apple container
-        run: nohup sudo container system start --enable-kernel-install
+      #- name: start apple container
+      #  run: nohup sudo container system start --enable-kernel-install
 
       - name: install docker cli
         run: |
