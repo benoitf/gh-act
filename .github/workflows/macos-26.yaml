@@ -29,14 +29,15 @@ jobs:
           chmod 700 ~/.ssh
           cat ~/.ssh/id_rsa_key.pub >> ~/.ssh/authorized_keys
           chmod 600 ~/.ssh/authorized_keys
+          ssh-keyscan -H localhost >> ~/.ssh/known_hosts
 
-#      - name: test ssh
-#        run: |
-#          ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "ls"
+      - name: test ssh
+        run: |
+          ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "ls"
 
 
- #     - name: start apple container
- #       run: ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "sudo container system start --enable-kernel-install"
+      - name: start apple container
+        run: ssh -i ~/.ssh/id_rsa_key -t $USER@localhost "sudo container system start --enable-kernel-install"
 
       - name: download kernel
         run: wget https://github.com/kata-containers/kata-containers/releases/download/3.17.0/kata-static-3.17.0-arm64.tar.xz
