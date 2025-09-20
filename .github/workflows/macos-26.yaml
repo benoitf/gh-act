@@ -36,7 +36,7 @@ jobs:
 
           # Send Apple Container commands automatically
           tmate -S /tmp/tmate.sock send-keys "echo 'Starting Apple Container...'" C-m
-          tmate -S /tmp/tmate.sock send-keys "container system start --enable-kernel-install | tee /tmp/container.log" C-m
+          tmate -S /tmp/tmate.sock send-keys "sudo container system start --enable-kernel-install | tee /tmp/container.log" C-m
           
           # Loop until 'container system status' returns exit code 1 or timeout (60s)
           START=$SECONDS
