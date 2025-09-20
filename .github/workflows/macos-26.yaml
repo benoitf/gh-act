@@ -56,7 +56,7 @@ jobs:
               echo "Container not ready yet..."
             fi
           done
-
+          cat /tmp/container.log
           # stop tmate session
           tmate -S /tmp/tmate.sock kill-session
 
